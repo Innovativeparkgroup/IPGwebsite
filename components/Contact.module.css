@@ -1,0 +1,87 @@
+.faqPlus {
+  transition: transform 0.3s ease;
+}
+
+.formInput:focus {
+  border-color: #1a56db !important;
+  box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.12) !important;
+}
+
+.formInput::placeholder {
+  color: rgba(16, 24, 38, 0.35);
+}
+
+.submitBtn:hover {
+  background: #1e63f5 !important;
+}
+
+.resetBtn:hover {
+  border-color: #1a56db !important;
+  color: #1a56db !important;
+}
+
+.bookLink:hover {
+  color: #001b3f !important;
+}
+
+.faqDetails[open] .faqPlus {
+  transform: rotate(45deg);
+}
+
+.faqDetails summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.faqDetails summary::-webkit-details-marker {
+  display: none;
+}
+
+@media (max-width: 880px) {
+  .contact2 {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+  .form2 {
+    grid-template-columns: 1fr !important;
+  }
+  .card {
+    margin-top: 0 !important;
+  }
+  .left {
+    margin-top: 8px !important;
+    order: 2;
+  }
+  .next2 {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero {
+    height: 46vh !important;
+    min-height: 344px !important;
+    max-height: 460px !important;
+  }
+  .heroImg {
+    object-position: 36% 80% !important;
+  }
+  .heroOverlay {
+    background: linear-gradient(180deg, rgba(0, 17, 42, 0.74) 0%, rgba(0, 17, 42, 0.42) 44%, rgba(0, 20, 48, 0.9) 100%) !important;
+  }
+  .heroInner {
+    padding: 104px 28px 30px !important;
+  }
+  .contactWrap {
+    padding: 0 24px !important;
+  }
+  .card {
+    margin-top: -34px !important;
+    position: relative;
+    z-index: 6;
+  }
+  .ctaArrow {
+    display: none !important;
+  }
+}

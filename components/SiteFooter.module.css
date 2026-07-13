@@ -1,0 +1,19 @@
+.footLink:hover {
+  color: #ffffff !important;
+}
+
+@media (max-width: 880px) {
+  .footGrid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 36px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .footGrid {
+    grid-template-columns: 1fr !important;
+  }
+  .tagline {
+    white-space: normal !important;
+  }
+}

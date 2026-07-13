@@ -1,0 +1,69 @@
+@media (max-width: 880px) {
+  .communityImg {
+    object-position: center 30% !important;
+  }
+  .svcSplit {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+  .svcRight {
+    padding-top: 0 !important;
+    max-width: none !important;
+  }
+  .svcSlide {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+  .svcImg {
+    order: -1 !important;
+    height: clamp(240px, 52vw, 360px) !important;
+  }
+  .core2 {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+  .recv {
+    grid-template-columns: 1fr !important;
+  }
+  .recv > li {
+    min-width: 0 !important;
+    padding: 34px 28px !important;
+  }
+  .recv h3 {
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+    font-size: 22px !important;
+    line-height: 1.08 !important;
+  }
+  .maint {
+    grid-template-columns: 1fr !important;
+  }
+  .maint > li {
+    border-right: none !important;
+    padding: 34px 0 0 0 !important;
+    border-top: 1px solid rgba(16, 24, 38, 0.12) !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .recv {
+    grid-template-columns: 1fr !important;
+  }
+  .recv > li {
+    min-width: 0 !important;
+  }
+  .cta {
+    padding: 36px 24px !important;
+    gap: 28px !important;
+  }
+  .ctaBtn {
+    white-space: normal !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 18px 24px !important;
+  }
+  .ctaArrow {
+    display: none !important;
+  }
+}
