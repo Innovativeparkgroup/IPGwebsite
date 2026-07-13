@@ -7,6 +7,7 @@ import SiteNav from "./SiteNav";
 import SiteFooter from "./SiteFooter";
 import GridLines from "./GridLines";
 import { HEAD, BODY } from "@/lib/fonts";
+import { submitToWeb3Forms } from "@/lib/web3forms";
 
 const CHECK: CSSProperties = {
   width: 19,
@@ -74,6 +75,8 @@ export default function HomeClient() {
   const [heroRevealed, setHeroRevealed] = useState(false);
   const [loaderHidden, setLoaderHidden] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
 
   useEffect(() => {
     const reveal = () => {
@@ -539,9 +542,29 @@ export default function HomeClient() {
                 <div style={{ background: "#FFFFFF", border: "1px solid rgba(16,24,38,.08)", padding: "clamp(34px,4.2vw,56px)", borderRadius: 12, boxShadow: "0 40px 80px -52px rgba(2,11,33,.45)" }}>
                   {!submitted ? (
                     <form
-                      onSubmit={(e) => {
+                      onSubmit={async (e) => {
                         e.preventDefault();
-                        setSubmitted(true);
+                        setSubmitting(true);
+                        setSubmitError(false);
+                        const form = e.currentTarget;
+                        const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+                        try {
+                          const ok = await submitToWeb3Forms({
+                            ...data,
+                            subject: `New audit request from ${data.name}`,
+                            from_name: "Innovative Park Group — Request an Audit",
+                          });
+                          if (ok) {
+                            setSubmitted(true);
+                            form.reset();
+                          } else {
+                            setSubmitError(true);
+                          }
+                        } catch {
+                          setSubmitError(true);
+                        } finally {
+                          setSubmitting(false);
+                        }
                       }}
                     >
                       <div data-form2="" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 22, marginBottom: 22 }}>
@@ -572,8 +595,13 @@ export default function HomeClient() {
                         <span style={{ fontFamily: BODY, fontWeight: 600, fontSize: 12.5, letterSpacing: ".12em", textTransform: "uppercase", color: "rgba(16,24,38,.6)" }}>Tell us about the park</span>
                         <textarea id="home-about" name="about" rows={4} placeholder="Size, age, known issues" className="formInput" style={{ background: "#F3F1EC", border: "1px solid rgba(16,24,38,.16)", color: "#101826", fontFamily: BODY, fontSize: 16.5, lineHeight: 1.55, padding: "16px 18px", outline: "none", width: "100%", resize: "vertical" }} />
                       </label>
-                      <button type="submit" className="ctaButton" style={{ fontFamily: BODY, fontWeight: 600, fontSize: 14, letterSpacing: ".14em", textTransform: "uppercase", color: "#FBFCFE", background: "#1A56DB", border: "none", padding: "19px 44px", cursor: "pointer", borderRadius: 15 }}>
-                        Submit Request
+                      {submitError && (
+                        <p style={{ fontFamily: BODY, fontSize: 14, lineHeight: 1.5, color: "#C0392B", marginBottom: 18 }}>
+                          Something went wrong sending your request. Please try again, or email us directly at admin@innovativeparkgroup.com.
+                        </p>
+                      )}
+                      <button type="submit" disabled={submitting} className="ctaButton" style={{ fontFamily: BODY, fontWeight: 600, fontSize: 14, letterSpacing: ".14em", textTransform: "uppercase", color: "#FBFCFE", background: "#1A56DB", border: "none", padding: "19px 44px", cursor: submitting ? "default" : "pointer", opacity: submitting ? 0.7 : 1, borderRadius: 15 }}>
+                        {submitting ? "Sending..." : "Submit Request"}
                       </button>
                     </form>
                   ) : (

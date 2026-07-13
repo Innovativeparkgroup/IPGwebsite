@@ -6,6 +6,7 @@ import SiteNav from "./SiteNav";
 import SiteFooter from "./SiteFooter";
 import GridLines from "./GridLines";
 import { HEAD, BODY } from "@/lib/fonts";
+import { submitToWeb3Forms } from "@/lib/web3forms";
 import styles from "./Contact.module.css";
 
 const NEXT_STEPS = [
@@ -26,6 +27,8 @@ const inputStyle = { background: "#F6F7F9", border: "1px solid rgba(16,24,38,.12
 
 export default function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
 
   return (
     <div style={{ position: "relative", background: "#F3F1EC", color: "#101826", fontFamily: BODY, minHeight: "100vh", overflow: "hidden" }}>
@@ -100,9 +103,29 @@ export default function ContactClient() {
                 <div style={{ background: "#FFFFFF", border: "1px solid rgba(16,24,38,.07)", borderRadius: 18, boxShadow: "0 36px 72px -30px rgba(0,21,49,.45),0 8px 24px -16px rgba(0,21,49,.3)", padding: "clamp(30px,3.6vw,52px)" }}>
                   {!submitted ? (
                     <form
-                      onSubmit={(e) => {
+                      onSubmit={async (e) => {
                         e.preventDefault();
-                        setSubmitted(true);
+                        setSubmitting(true);
+                        setSubmitError(false);
+                        const form = e.currentTarget;
+                        const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+                        try {
+                          const ok = await submitToWeb3Forms({
+                            ...data,
+                            subject: `New contact form message from ${data.name}`,
+                            from_name: "Innovative Park Group — Contact Form",
+                          });
+                          if (ok) {
+                            setSubmitted(true);
+                            form.reset();
+                          } else {
+                            setSubmitError(true);
+                          }
+                        } catch {
+                          setSubmitError(true);
+                        } finally {
+                          setSubmitting(false);
+                        }
                       }}
                     >
                       <h2 style={{ fontFamily: HEAD, fontWeight: 800, textTransform: "uppercase", fontSize: "clamp(26px,2.6vw,32px)", letterSpacing: "-.01em", display: "block", marginBottom: 8 }}>Send a Message</h2>
@@ -131,8 +154,13 @@ export default function ContactClient() {
                         <span style={{ fontFamily: BODY, fontWeight: 600, fontSize: 11, letterSpacing: ".16em", textTransform: "uppercase", color: "rgba(16,24,38,.5)" }}>Message</span>
                         <textarea id="contact-message" name="message" rows={5} required placeholder="Tell us about your skateparks and what you're looking to get done." className={styles.formInput} style={{ ...inputStyle, lineHeight: 1.55, resize: "vertical" }} />
                       </label>
-                      <button type="submit" className={styles.submitBtn} style={{ width: "100%", fontFamily: BODY, fontWeight: 700, fontSize: 14, letterSpacing: ".14em", textTransform: "uppercase", color: "#FBFCFE", background: "#1A56DB", border: "none", padding: "18px 38px", cursor: "pointer", borderRadius: 12, transition: "background .2s ease" }}>
-                        Send Message →
+                      {submitError && (
+                        <p style={{ fontFamily: BODY, fontSize: 14, lineHeight: 1.5, color: "#C0392B", marginBottom: 18 }}>
+                          Something went wrong sending your message. Please try again, or email us directly at admin@innovativeparkgroup.com.
+                        </p>
+                      )}
+                      <button type="submit" disabled={submitting} className={styles.submitBtn} style={{ width: "100%", fontFamily: BODY, fontWeight: 700, fontSize: 14, letterSpacing: ".14em", textTransform: "uppercase", color: "#FBFCFE", background: "#1A56DB", border: "none", padding: "18px 38px", cursor: submitting ? "default" : "pointer", opacity: submitting ? 0.7 : 1, borderRadius: 12, transition: "background .2s ease" }}>
+                        {submitting ? "Sending..." : "Send Message →"}
                       </button>
                     </form>
                   ) : (
